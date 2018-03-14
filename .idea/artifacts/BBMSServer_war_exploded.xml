@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="BBMSServer:war exploded">
+    <output-path>C:/Program Files/Apache/apache-tomcat-8.5.23/webapps/BBMSServer</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="BBMSServer" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="dbcp2-2.1.1" />
+          <element id="library" level="project" name="jsoup-1.10.3" />
+          <element id="library" level="project" name="mysql-connector-java-5.1.6-bin" />
+          <element id="library" level="project" name="Spring" />
+          <element id="library" level="project" name="Hibernate" />
+          <element id="library" level="project" name="obj2json" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="BBMSServer/web/Web" />
+    </root>
+  </artifact>
+</component>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+        xmlns:tx="http://www.springframework.org/schema/tx">
+
+    <!--
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/bbms</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">123456</property>
+
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <mapping class="com.dissertaion.bbms.vo.Book"/>
+        <mapping class="com.dissertaion.bbms.vo.Accountunt"/>
+        -->
+    <!--配置dbcp数据库连接池-->
+
+
+    <bean id="dataSoure" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <property name="url" value="jdbc:mysql://localhost:3306/bbms"/>
+        <property name="username" value="root"/>
+        <property name="password" value="123456"/>
+    </bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource">
+            <ref bean="dataSoure"></ref>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="hbm2ddl.auto">update</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.format_sql">true</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/bbms</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+            </props>
+        </property>
+        <property name="annotatedClasses">
+            <list>
+                <value>com.dissertaion.bbms.vo.Book</value>
+                <value>com.dissertaion.bbms.vo.Account</value>
+                <value>com.dissertaion.bbms.vo.BookInfo</value>
+                <value>com.dissertaion.bbms.vo.Subscribe</value>
+                <value>com.dissertaion.bbms.vo.ReaderInfo</value>
+                <value>com.dissertaion.bbms.vo.BorrowInfo</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+    <bean id="baseDAO" class="com.dissertaion.bbms.dao.BaseDao">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <!--BOOK操作-->
+    <bean id="bookDao" class="com.dissertaion.bbms.dao.impl.BookDaoImpl" parent="baseDAO"/>
+    <bean id="bookService" class="com.dissertaion.bbms.service.impl.BookServiceImpl">
+        <property name="bookDao" ref="bookDao"/>
+    </bean>
+    <bean id="bookInfoDao" class="com.dissertaion.bbms.dao.impl.BookInfoDaoImpl" parent="baseDAO"/>
+    <bean id="bookInfoService" class="com.dissertaion.bbms.service.impl.BookInfoServiceImpl">
+        <property name="bookInfoDao" ref="bookInfoDao"/>
+    </bean>
+    <bean id="BookServlet" class="com.dissertaion.bbms.servlet.BookServlet">
+        <property name="bookService" ref="bookService"/>
+        <property name="bookInfoService" ref="bookInfoService"/>
+    </bean>
+
+    <!--Accoun操作-->
+    <bean id="accountDao" class="com.dissertaion.bbms.dao.impl.AccountDaoImpl" parent="baseDAO"/>
+    <bean id="accountService" class="com.dissertaion.bbms.service.impl.AccountServiceImpl">
+        <property name="accountDao" ref="accountDao"/>
+    </bean>
+    <!--Subscribe操作-->
+    <bean id="subscribeDao" class="com.dissertaion.bbms.dao.impl.SubscribeDaoImpl" parent="baseDAO"/>
+    <bean id="subscribeService" class="com.dissertaion.bbms.service.impl.SubscribeServieImpl">
+        <property name="subscribeDao" ref="subscribeDao"/>
+    </bean>
+
+    <!--Reader操作-->
+    <bean id="readerInfoDao" class="com.dissertaion.bbms.dao.impl.ReaderInfoDaoImpl" parent="baseDAO"/>
+    <bean id="readerInfoService" class="com.dissertaion.bbms.service.impl.ReaderInfoServiceImpl">
+        <property name="readerInfoDao" ref="readerInfoDao"/>
+    </bean>
+
+    <!--Borrow操作-->
+    <bean id="borrowInfoDao" class="com.dissertaion.bbms.dao.impl.BorrowInfoDaoImpl " parent="baseDAO"/>
+    <bean id="borrowInfoService" class="com.dissertaion.bbms.service.impl.BorrowInfoServiceImpl">
+        <property name="borrowInfoDao" ref="borrowInfoDao"/>
+    </bean>
+    <bean id="AccountServlet" class="com.dissertaion.bbms.servlet.AccountServlet">
+        <property name="subscribeService" ref="subscribeService"/>
+        <property name="accountService" ref="accountService"/>
+        <property name="borrowInfoService" ref="borrowInfoService"/>
+        <property name="readerInfoService" ref="readerInfoService"/>
+    </bean>
+
+
+</beans>
